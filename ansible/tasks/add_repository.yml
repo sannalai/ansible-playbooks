@@ -1,0 +1,5 @@
+- name: Add ansible repository
+  apt_repository:
+    repo: ppa:ansible/ansible
+    state: present
+  become: true

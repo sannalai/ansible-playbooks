@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Eclipse Oxygen 
+Icon=eclipse.png
+Path=/usr/local/devenv/eclipse-oxygen-3a
+Exec=/usr/local/devenv/eclipse-oxygen-3a/eclipse
+StartupNotify=false
+StartupWMClass=Eclipse
+OnlyShowIn=Unity;
+X-UnityGenerated=true

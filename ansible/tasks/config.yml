@@ -1,0 +1,6 @@
+- name: Target playbooks to localhost
+  become: true
+  lineinfile:
+    path: '/etc/ansible/hosts'
+    line: 'localhost ansible_connection=local'
+    regexp: '^localhost '

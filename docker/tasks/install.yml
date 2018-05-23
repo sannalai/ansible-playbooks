@@ -1,0 +1,14 @@
+- name: Install latest docker
+  package:
+    name: docker-ce
+    state: latest
+  become: true
+
+- name: Install docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.21.2/docker-compose-linux-x86_64
+    dest: '/usr/local/bin/docker-compose'
+    mode: 0755
+    owner: root
+    group: root
+  become: true

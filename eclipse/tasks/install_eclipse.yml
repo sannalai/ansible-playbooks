@@ -1,0 +1,63 @@
+- name: Check if eclipse already exists
+  stat:
+    path: /usr/local/devenv/eclipse-oxygen-3a/eclipse
+  register: p
+
+- name: Download eclipse
+  get_url:
+    url: http://eclipsemirror.itemis.de/eclipse/technology/epp/downloads/release/oxygen/3a/eclipse-jee-oxygen-3a-linux-gtk-x86_64.tar.gz
+    dest: /tmp/eclipse.tar.gz
+    mode: 0666
+    checksum: sha512:55c696a9ee1a8c1085434650a1de54ab0ed91d1a00858b5a0cb804578ddf6587393dd65dcb6af37a71819affeb91e0752e23aa6c8e985ae3b621b87e3b665d29
+  when: p.stat.exists == False
+
+- name: Create directory for eclipse
+  file:
+    path: /usr/local/devenv/eclipse-oxygen-3a
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  become: true
+  when: p.stat.exists == False
+
+- name: Unpack eclipse
+  unarchive:
+    src: /tmp/eclipse.tar.gz
+    dest: /usr/local/devenv/eclipse-oxygen-3a
+    extra_opts: [--strip-components=1]
+  when: p.stat.exists == False
+
+- name: Delete temporary file
+  file:
+    path: /tmp/eclipse.tar.gz
+    state: absent
+
+- name: Copy desktop icon
+  copy:
+    src: eclipse.desktop
+    dest: /usr/share/applications/eclipse.desktop
+    mode: 0644
+  become: true
+
+- name: Install java package repository
+  apt_repository:
+    repo: ppa:webupd8team/java
+    state: present
+  become: true
+
+- name: Accept oracle license
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+  become: true  
+
+- name: Install latest version of oracle java8
+  apt:
+    name: oracle-java8-installer
+    state: latest
+  become: true
+
+- name: Set oracle java as default
+  apt:
+    name: oracle-java8-set-default
+    state: present
+  become: true
+
