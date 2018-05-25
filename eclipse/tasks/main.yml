@@ -1,1 +1,3 @@
 - include: install_eclipse.yml
+- include: install_java.yml
+- include: install_lombok.yml

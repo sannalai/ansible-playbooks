@@ -27,6 +27,12 @@
     extra_opts: [--strip-components=1]
   when: p.stat.exists == False
 
+- name: Change to default garbage collector for virtualbox
+  lineinfile:
+    path: /usr/local/devenv/eclipse-oxygen-3a/eclipse.ini
+    line: -XX:+UseG1GC
+    state: absent
+
 - name: Delete temporary file
   file:
     path: /tmp/eclipse.tar.gz
@@ -38,26 +44,3 @@
     dest: /usr/share/applications/eclipse.desktop
     mode: 0644
   become: true
-
-- name: Install java package repository
-  apt_repository:
-    repo: ppa:webupd8team/java
-    state: present
-  become: true
-
-- name: Accept oracle license
-  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-  become: true  
-
-- name: Install latest version of oracle java8
-  apt:
-    name: oracle-java8-installer
-    state: latest
-  become: true
-
-- name: Set oracle java as default
-  apt:
-    name: oracle-java8-set-default
-    state: present
-  become: true
-
