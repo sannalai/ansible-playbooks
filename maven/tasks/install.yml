@@ -1,0 +1,40 @@
+- name: Check if maven already exists
+  stat:
+    path: /usr/local/devenv/maven
+  register: p
+
+- name: Download maven
+  get_url:
+    url: http://www.nic.funet.fi/pub/mirrors/apache.org/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+    dest: /tmp/maven.tar.gz
+    mode: 0666
+    checksum: sha512:5b36a2289606cfaf9177991f889993742a485a48b9fb7ca43b67fbbe1a978a258fc971e0dce3b63d51d235abdf49f771c99900b2e77ee2a793825913ea32971b
+  when: p.stat.exists == False
+
+- name: Create directory for maven
+  file:
+    path: /usr/local/devenv/maven
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  become: true
+  when: p.stat.exists == False
+
+- name: Unpack maven
+  unarchive:
+    src: /tmp/maven.tar.gz
+    dest: /usr/local/devenv/maven
+    extra_opts: [--strip-components=1]
+  when: p.stat.exists == False
+
+- name: Delete temporary file
+  file:
+    path: /tmp/maven.tar.gz
+    state: absent
+
+- name: Create symbolic link
+  file:
+    src: /usr/local/devenv/maven/bin/mvn
+    dest: /usr/local/bin/mvn
+    state: link
+  become: true
