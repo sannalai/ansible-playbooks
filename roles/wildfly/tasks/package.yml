@@ -1,0 +1,33 @@
+- name: Check if wildfly already exists
+  stat:
+    path: /usr/local/devenv/wildfly-{{ wildfly_version }}
+  register: p
+
+- name: Download wildfly
+  get_url:
+    url: http://download.jboss.org/wildfly/{{ wildfly_version }}/wildfly-{{ wildfly_version }}.tar.gz
+    dest: /tmp/wildfly.tar.gz
+    mode: 0666
+    checksum: sha512:{{ wildfly_checksum }}
+  when: p.stat.exists == False
+
+- name: Create directory for wildfly
+  file:
+    path: /usr/local/devenv/wildfly-{{ wildfly_version }}
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  become: true
+  when: p.stat.exists == False
+
+- name: Unpack wildfly
+  unarchive:
+    src: /tmp/wildfly.tar.gz
+    dest: /usr/local/devenv/wildfly-{{ wildfly_version }}
+    extra_opts: [--strip-components=1]
+  when: p.stat.exists == False
+
+- name: Delete temporary file
+  file:
+    path: /tmp/wildfly.tar.gz
+    state: absent

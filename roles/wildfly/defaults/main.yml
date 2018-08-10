@@ -1,0 +1,4 @@
+---
+# Wildfly defaults
+wildfly_version: 13.0.0.Final
+wildfly_checksum: c8341a5573c895a53d33059e5eb9f0d1413d84abe9d411d70cb204bea012a9046795e2a273456050b2a949c57c89b8b57bfad008b9372b602d9831a0feba1ee4

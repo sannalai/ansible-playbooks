@@ -1,0 +1,9 @@
+---
+- hosts: all
+  roles:
+    - ansible
+    - java
+    - maven
+    - eclipse
+    - wildfly
+    - docker
