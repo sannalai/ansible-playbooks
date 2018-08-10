@@ -13,4 +13,4 @@
     mode: 0666
 
 - name: Configure lombok for eclipse
-  shell: java -jar /usr/local/devenv/lombok/lombok.jar install /usr/local/devenv/eclipse-oxygen-3a/
+  shell: java -jar /usr/local/devenv/lombok/lombok.jar install {{ eclipse_install_path }}

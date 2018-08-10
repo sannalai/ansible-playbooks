@@ -1,19 +1,19 @@
 - name: Check if eclipse already exists
   stat:
-    path: /usr/local/devenv/eclipse-oxygen-3a/eclipse
+    path: "{{ eclipse_install_path }}/eclipse"
   register: p
 
 - name: Download eclipse
   get_url:
-    url: http://eclipsemirror.itemis.de/eclipse/technology/epp/downloads/release/oxygen/3a/eclipse-jee-oxygen-3a-linux-gtk-x86_64.tar.gz
+    url: http://eclipsemirror.itemis.de/eclipse/technology/epp/downloads/release/{{ eclipse_major_version }}/{{ eclipse_minor_version }}/eclipse-jee-{{ eclipse_major_version }}-{{ eclipse_minor_version }}-linux-gtk-x86_64.tar.gz
     dest: /tmp/eclipse.tar.gz
     mode: 0666
-    checksum: sha512:55c696a9ee1a8c1085434650a1de54ab0ed91d1a00858b5a0cb804578ddf6587393dd65dcb6af37a71819affeb91e0752e23aa6c8e985ae3b621b87e3b665d29
+    checksum: sha512:{{ eclipse_checksum }}
   when: p.stat.exists == False
 
 - name: Create directory for eclipse
   file:
-    path: /usr/local/devenv/eclipse-oxygen-3a
+    path: "{{ eclipse_install_path }}"
     state: directory
     mode: 0755
     owner: "{{ ansible_user_id }}"
@@ -23,13 +23,13 @@
 - name: Unpack eclipse
   unarchive:
     src: /tmp/eclipse.tar.gz
-    dest: /usr/local/devenv/eclipse-oxygen-3a
+    dest: "{{ eclipse_install_path }}"
     extra_opts: [--strip-components=1]
   when: p.stat.exists == False
 
 - name: Change to default garbage collector for virtualbox
   lineinfile:
-    path: /usr/local/devenv/eclipse-oxygen-3a/eclipse.ini
+    path: "{{ eclipse_install_path }}/eclipse.ini"
     line: -XX:+UseG1GC
     state: absent
 
@@ -39,8 +39,8 @@
     state: absent
 
 - name: Copy desktop icon
-  copy:
+  template:
     src: eclipse.desktop
-    dest: /usr/share/applications/eclipse.desktop
+    dest: /usr/share/applications/eclipse-{{ eclipse_major_version }}-{{ eclipse_minor_version }}.desktop
     mode: 0644
   become: true
