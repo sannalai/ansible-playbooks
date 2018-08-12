@@ -5,10 +5,10 @@
 
 - name: Download maven
   get_url:
-    url: http://www.nic.funet.fi/pub/mirrors/apache.org/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+    url: http://www.nic.funet.fi/pub/mirrors/apache.org/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz
     dest: /tmp/maven.tar.gz
     mode: 0666
-    checksum: sha512:5b36a2289606cfaf9177991f889993742a485a48b9fb7ca43b67fbbe1a978a258fc971e0dce3b63d51d235abdf49f771c99900b2e77ee2a793825913ea32971b
+    checksum: sha1:{{ maven_checksum }}
   when: p.stat.exists == False
 
 - name: Create directory for maven
