@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
+Terminal=false
 Type=Application
 Name=Eclipse {{ eclipse_major_version }} {{ eclipse_minor_version }}
 Icon=eclipse.png
@@ -8,5 +9,3 @@ Path={{ eclipse_install_path }}
 Exec={{ eclipse_install_path }}/eclipse
 StartupNotify=false
 StartupWMClass=Eclipse
-OnlyShowIn=Unity;
-X-UnityGenerated=true
