@@ -1,0 +1,16 @@
+- name: Create directory for lombok
+  file:
+    path: /usr/local/devenv/lombok
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  become: true
+
+- name: Download lombok
+  get_url:
+    url: https://projectlombok.org/downloads/lombok.jar
+    dest: /usr/local/devenv/lombok/lombok.jar
+    mode: 0666
+
+- name: Configure lombok for netbeans
+  shell: java -jar /usr/local/devenv/lombok/lombok.jar install {{ netbeans_install_path }}

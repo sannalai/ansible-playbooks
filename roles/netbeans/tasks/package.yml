@@ -1,0 +1,48 @@
+- name: Check if netbeans already exists
+  stat:
+    path: "{{ netbeans_install_path }}/bin"
+  register: p
+
+- name: Download netbeans
+  get_url:
+    url: http://download.netbeans.org/netbeans/{{ netbeans_version }}/final/zip/netbeans-{{ netbeans_version }}-{{ netbeans_release_date }}-javaee.zip
+    dest: /tmp/netbeans.zip
+    mode: 0666
+    checksum: sha256:{{ netbeans_checksum }}
+  when: not p.stat.exists
+
+- name: Create directory for netbeans
+  file:
+    path: "{{ netbeans_install_path }}"
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  become: true
+  when: not p.stat.exists
+
+- name: Unpack netbeans
+  unarchive:
+    src: /tmp/netbeans.zip
+    dest: "{{ netbeans_install_path }}"
+  when: not p.stat.exists
+
+- name: Move netbeans
+  shell: mv "{{ netbeans_install_path }}/netbeans/"* "{{ netbeans_install_path }}"
+  when: not p.stat.exists
+
+- name: Remove obsolete netbeans directory
+  file:
+    name: "{{ netbeans_install_path }}/netbeans"
+    state: absent
+
+- name: Delete temporary file
+  file:
+    path: /tmp/netbeans.zip
+    state: absent
+
+- name: Copy desktop icon
+  template:
+    src: netbeans.desktop
+    dest: /usr/share/applications/netbeans-{{ netbeans_version }}.desktop
+    mode: 0644
+  become: true

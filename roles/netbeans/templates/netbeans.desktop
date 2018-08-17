@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Terminal=false
+Type=Application
+Name=Netbeans {{ netbeans_version }}
+Icon=nb/netbeans.png
+Path={{ netbeans_install_path }}
+Exec={{ netbeans_install_path }}/bin/netbeans
+StartupNotify=false
+StartupWMClass=Netbeans

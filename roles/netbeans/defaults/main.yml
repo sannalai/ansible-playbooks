@@ -1,0 +1,6 @@
+---
+# Netbeans defaults
+netbeans_version: 8.2
+netbeans_release_date: 201609300101
+netbeans_checksum: 5f44f36c6f0c5ae2b322994024bc4beba4c22a9eccbb22e878d5b1151fca15fb
+netbeans_install_path: /usr/local/devenv/netbeans-{{ netbeans_version }}
